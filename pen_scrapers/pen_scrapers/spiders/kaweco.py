@@ -1,4 +1,6 @@
 import scrapy
+from pen_scrapers.items import FountainPenItem
+
 
 
 class KawecoSpider(scrapy.Spider):
@@ -19,20 +21,17 @@ class KawecoSpider(scrapy.Spider):
             yield scrapy.Request(next_page_url, callback=self.parse)
 
     def parse_product(self, response):
-
-        name = response.css("h1.product--title::text").extract()
-        price = response.css("span.price--content::text").extract()
-        sizes = response.css("div.variant--group label::text").extract()
+        pen = FountainPenItem()
+        pen['brand'] = 'kaweco'
+        pen['name'] = response.css("h1.product--title::text").extract()
+        pen['price'] = response.css("span.price--content::text").extract()
+        pen['size'] = response.css("div.variant--group label::text").extract()
         detail_keys = response.css("table.product--properties-table td.product--properties-label::text").extract()
         detail_values = response.css("table.product--properties-table td.product--properties-value::text").extract()
         details = dict(zip(detail_keys, detail_values))
+        pen['details'] = details
+        yield pen
 
-        yield {
-                "name": name,
-                "price": price,
-                "sizes": sizes,
-                "details": details
-                }
 
     def get_next_page_url(self, response):
 
@@ -40,14 +39,12 @@ class KawecoSpider(scrapy.Spider):
         current_page = self.extract_page_number(current_url)
         next_page_number = current_page + 1
         next_page_url = current_url.replace(f"?p={current_page}", f"?p={next_page_number}")
-        return None if self.has_previous_page(response) else next_page_url
+        return next_page_url if self.has_items(response) else None
 
     def extract_page_number(self, url):
 
         return int(url.split("?p=")[-1])
 
-    def has_previous_page(self, response):
-
-        previous_button = response.xpath('//a[contains(text(), "Load previous articles")]')
-
-        return bool(previous_button)
+    def has_items(self, response):
+        items = response.css("div.product--box")
+        return bool(items)
