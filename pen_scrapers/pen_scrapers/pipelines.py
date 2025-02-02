@@ -10,4 +10,6 @@ from itemadapter import ItemAdapter
 
 class PenScrapersPipeline:
     def process_item(self, item, spider):
+
+        
         return item

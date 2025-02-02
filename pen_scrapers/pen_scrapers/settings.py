@@ -61,9 +61,9 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    "pen_scrapers.pipelines.PenScrapersPipeline": 300,
-#}
+ITEM_PIPELINES = {
+   "pen_scrapers.pipelines.PenScrapersPipeline": 300,
+}
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
@@ -89,16 +89,3 @@ ROBOTSTXT_OBEY = True
 # Set settings whose default value is deprecated to a future-proof value
 TWISTED_REACTOR = "twisted.internet.asyncioreactor.AsyncioSelectorReactor"
 FEED_EXPORT_ENCODING = "utf-8"
-
-
-SELENIUM_DRIVER_NAME = 'firefox'  # or 'firefox' depending on your browser
-SELENIUM_DRIVER_EXECUTABLE_PATH = '/geckodriver'  # Replace with the path to your driver
-SELENIUM_DRIVER_ARGUMENTS = ['--headless']  # Run the browser in headless mode (without GUI)
-
-# Enable Scrapy-Selenium middleware
-DOWNLOADER_MIDDLEWARES = {
-    'scrapy_selenium.SeleniumMiddleware': 800,
-}
-
-# Set up the download delay (optional, based on your preference)
-DOWNLOAD_DELAY = 1  # Adjust as needed to prevent rate-limiting or blocking
